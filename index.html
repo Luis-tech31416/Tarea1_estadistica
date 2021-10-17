@@ -7,7 +7,7 @@
 <meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
-
+<link rel="stylesheet" type="text/css" href="styles.css">
 
 
 
@@ -365,6 +365,7 @@ pre code {
 
 
 <div id="tarea-1" class="section level1">
+<button type="button" class="btn btn-dark" onclick="cambiarModo()">Oscuro / Claro</button>
 <h1>Tarea 1</h1>
 <ul>
 <big>
@@ -774,6 +775,15 @@ $(document).ready(function () {
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
+
+
+    <script type="text/javascript"> 
+      function cambiarModo() { 
+        var cuerpoweb = document.body; 
+        cuerpoweb.classList.toggle("oscuro"); 
+      } 
+    </script>
+
 
 </body>
 </html>
