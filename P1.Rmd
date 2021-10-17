@@ -1,0 +1,385 @@
+---
+output: html_document
+---
+
+\br
+\br
+
+# Tarea 1
+
+<ul>
+  <big>
+  <li>Luis Fernando Apáez Álvarez</li>
+  <li>Carlos Luna</li>
+  </big>
+</ul>
+
+\br
+\br
+
+2. Escriba una función que se llame _truncar_ como se especifica en la tarea.
+
+_Solución:_ 
+
+* Utilizaremos la función predefinida ``as.integer()`` para extraer la parte entera de un número. Así, al efectuar la diferencia entre el número y su parte entera obtendremos los decimales de dicho número, por ejemplo $2.5421 - 2 =0.5421$. Luego, de acuerdo al número de decimales que queramos mostrar, digamos $k$, entonces multiplicaremos dicha diferencia por $10^k$. Por ejemplo, supongamos que queremos mostrar dos decimales de $2.5421$ (es decir, mostrar el número $2.54$), por lo que consideraremos $0.5421 \cdot 10^2=54.21$ (es decir ``x <- (2.5421-as.integer(2.5421)) * 10 ** 2``) y a este resultado nuevamente le obtendremos su parte entera con ``as.integer(x)``.  Lo anterior nos arrojará $54$ de modo que, para obtener el resultado buscado, bastará con efectuar $2 + \frac{54}{100}=2+\frac{54}{10^2}=2.54$, es decir ``as.integer(2.5421) + as.integer(x / 10 ** 2)``. 
+
+* Para el caso en que el número decimal tenga como parte entera el cero, por ejemplo el $0.1416$, bastará con multiplicar ese número por $10^k$, donde $k$ es el número de decimales que queremos mostrar, digamos $k=3$. Entonces tendremos $0.1416 \cdot 10^3=141.6$ al cual le obtendremos su parte entera y después dividiremos entre $10^3$ para tener que $\frac{141}{10^3}=0.141$.
+
+Ahora, en código tendríamos que
+
+
+```{r}
+
+# Definimos la función truncar
+truncar <- function(num, k){
+  
+  # Condicionamos a que k sea no negativo
+  if (k < 0){
+    
+    print("El número de decimales debe ser un número entero no negativo")
+    
+  } else {
+    
+    # Definimos una variable como la parte entera de num
+    num_int = as.integer(num)
+    
+    # Controlamos los casos en que num sea un decimal con parte entera distinta de cero
+    
+    if (num_int != 0){ 
+      x = (num - num_int ) * 10 ** k 
+      y = as.integer(x) / 10 ** k 
+      z = num_int + y
+      
+      return(z)
+      
+    } else {
+      
+      # Caso en que la parte entera de num es cero
+      
+      y = as.integer(num * 10 ** k) / 10 ** k
+      return(y)
+      
+    }
+  }
+}
+```
+
+Probamos la función
+
+```{r}
+# Ponemos lo siguiente para permitir que r muestre, según sea el caso, hasta 10 decimales de un número
+options(digits = 11)
+
+truncar(pi,10)
+truncar(exp(1),-7)
+truncar(-97.3028101, 5)
+```
+
+3. Realice una función que simule el juego del Monthy Hall:
+
+_Solución:_
+
+La función que crearemos no tendrá argumentos pues el número de la puerta con la que se jugará será asignada por el presentador. Además, asignaremos de manera aleatoria el número entero entre 1 y 3 de la puerta que contiene el Mazda 2, así como el número de puerta que le corresponde al jugador. Así
+
+* crearemos un vector aleatorio (digamos ``num_aleatorios``) de 9 entradas (con los números 1,2 y 3) con repetición para permitir que el número de la puerta aleatoria pueda coincidir con el número de puerta asignado al jugador
+
+* creamos 3 variables auxiliares para determinar el número de la(s) puerta(s) restante(s)
+
+* Si el número de puerta del jugador resulta ser la ganadora, entonces tendremos que asignar un número distinto (entre 1,2 y 3) a las dos puertas restantes, asignando a la primera puerta restante un número del vector aleatorio ``num_aleatorios`` distinto del número de la puerta ganadora; luego, para la segunda puerta restante utilizaremos el mismo procedimiento salvo que agregaremos que el número escogido de ``num_aleatorios`` sea distinto del número de la puerta ganadora y distinto del número de la primera puerta restante.
+
+* si el jugador pierde, entonces tendremos inicialmente dos puertas asignadas con números distintos, de tal manera, en este caso, sólo debemos asignar adicionalmente el número de la puerta restante (la no ganadora y la que no es del jugador)
+
+* finalmente, en esta parte, probamos si el código funciona para ver si el jugador gana o pierde 
+
+```{r }
+Monthy_Hall <- function() {
+  # Vector con 9 entradas con los números enteros del 1 al 3 
+  num_aleatorios = sample(1:3, 9, replace = T)
+  
+  # Número que contiene el Mazda 2 en esta ronda de juego 
+  num_ganador = num_aleatorios[2]
+  
+  # Asignamos el número de la puerta que le corresponde al jugador en esta ronda
+  num_puerta = num_aleatorios[3]
+  
+  # Le decimos al jugador qué puerta le tocó
+  print(paste("Te ha tocado la puerta número:", num_puerta))
+  
+  # Variables auxiliares
+  num_puerta_rest1 = 0
+  num_puerta_rest2 = 0
+  num_puerta_rest3 = 0
+  
+  # Número de puertas restantes para el caso en que el jugador gana
+  if (num_puerta == num_ganador){
+    
+    # Asignación del número de la primera puerta restante
+    for (i in num_aleatorios){
+      if (i != num_puerta){
+        num_puerta_rest1 = i
+      }
+    }
+    
+    # Asignación del número de la segunda puerta restante
+    for (i in num_aleatorios){
+      if (i != num_puerta & i!=num_puerta_rest1){
+        num_puerta_rest2 = i
+      }
+    }
+  } 
+  
+  # Número de la puerta restante para el caso en que el jugador pierde
+  else {
+    for (i in num_aleatorios){
+      if (i != num_puerta & i!=num_ganador){
+        num_puerta_rest3 = i
+      }
+    }
+  }
+  
+  # Hacemos algunas pruebas....
+  if (num_puerta == num_ganador){
+    print(paste("El jugador ha ganado con el número de puerta:", num_puerta))
+    print(paste("Puerta con una corona:", num_puerta_rest1))
+    print(paste("Puerta con otra corona:", num_puerta_rest2))
+    
+  } else {
+
+    print(paste("Número de puerta del jugador:", num_puerta))
+    print(paste("Número de puerta ganadora:", num_ganador))
+    print(paste("Puerta restante con una corona", num_puerta_rest3))
+  }
+}
+
+
+# Invocamos la función antes creada
+Monthy_Hall()
+```
+
+siendo así que, en este caso, el jugador pierde.
+
+* Lo que sigue será destapar una puerta que el presentador sabe que tiene una corona. Será necesario considerar los casos: el jugador gana o el jugador pierde. Si el jugador gana, podemos destapar cualquiera de las dos puertas ``num_puerta_rest1`` o ``num_puerta_rest2``; si el jugador pierde debemos destapar la puerta ``num_puerta_rest3``.
+
+```{r eval=FALSE}
+
+  # . Código anterior de la función
+  # . Código anterior de la función
+  # . Código anterior de la función
+  # . Código anterior de la función
+
+  # El presentador destapa una puerta
+  if (num_puerta == num_ganador){
+    print(paste("La puerta número", num_puerta_rest1, " contiene una deliciosa corona cero"))
+  } else {
+    print(paste("La puerta número", num_puerta_rest3, " contiene una deliciosa corona cero"))
+  }
+}
+```
+
+* Simulamos como si el presentador preguntara al jugador si desea cambiar de puerta. Notemos que, si el jugador había elegido al principio la puerta ganadora y si decide cambiar de puerta, entonces necesariamente cambiará al número de puerta almacenado en ``num_puerta_rest2`` pues ya mostramos el contenido de la puerta con número ``num_puerta_rest1``. Si el jugador había elegido la puerta no ganadora, entonces ya mostramos el contenido de la puerta con número almacenado en ``num_puerta_rest3``, por lo que, si el jugador decide cambiar de puerta, entonces necesariamente cambiará a la puerta ganadora.
+
+```{r eval=FALSE}
+
+  # . Código anterior de la función
+  # . Código anterior de la función
+  # . Código anterior de la función
+  # . Código anterior de la función
+
+  # El presentador pregunta al jugador si desea cambiar de puerta
+  respuesta = askYesNo(msg = "¿Desea cambiar de puerta?")
+
+  # Damos un mensaje
+  if (respuesta) {
+    print("Haz cambiado de número de puerta, ¡perfecto!")
+  } else {
+    print("¡Bien! no haz cambiado de número de puerta, continuemos")
+  }
+
+  if (num_puerta == num_ganador){
+    # Si el jugador cambia de puerta, entonces cambiará necesariamente al número 
+    # de puerta en num_puerta_rest2, pues ya mostramos anteriormente el contenido
+    # de la puerta con número almacenado en num_puerta_rest1
+    
+    if(respuesta){
+      num_puerta = num_puerta_rest2
+    }
+  } else {
+    # Si el jugador cambia de puerta, entonces cambiará necesariamente a la puerta
+    # ganadora pues, en este caso, ya mostramos el contenido de la puerta con 
+    # número almacenado en num_puerta_rest3
+    
+    if (respuesta){
+      num_puerta = num_ganador
+    }
+  }
+}
+```
+
+* Para finalizar el presentador mostrará la puerta ganadora y le dirá al jugador si gano o perdió
+
+```{r eval=FALSE}
+
+  # . Código anterior de la función
+  # . Código anterior de la función
+  # . Código anterior de la función
+  # . Código anterior de la función
+
+  # El jugador sabrá si ganó o perdió
+  print("Procedamos a destapar la puerta ganadora....")
+
+  if (num_puerta == num_ganador){
+    print(paste("La puerta ganadora es:", num_puerta, "¡felicidades, has ganado!"))
+  }
+  else {
+    print(paste("La puerta ganadora tiene el número:", num_ganador, "lamentablemente haz perdido"))
+  }
+}
+```
+
+
+---
+
+El código completo de la función queda como 
+
+```{r}
+Monthy_Hall <- function() {
+  # Vector con 9 entradas con los números enteros del 1 al 3 
+  num_aleatorios = sample(1:3, 9, replace = T)
+  
+  # Número que contiene el Mazda 2 en esta ronda de juego 
+  num_ganador = num_aleatorios[2]
+  
+  # Asignamos el número de la puerta que le corresponde al jugador en esta ronda
+  num_puerta = num_aleatorios[3]
+  
+  # Le decimos al jugador qué puerta le tocó
+  print(paste("Te ha tocado la puerta número:", num_puerta))
+  
+  # Variables auxiliares
+  num_puerta_rest1 = 0
+  num_puerta_rest2 = 0
+  num_puerta_rest3 = 0
+  
+  # Número de puertas restantes para el caso en que el jugador gana
+  if (num_puerta == num_ganador){
+    
+    # Asignación del número de la primera puerta restante
+    for (i in num_aleatorios){
+      if (i != num_puerta){
+        num_puerta_rest1 = i
+      }
+    }
+    
+    # Asignación del número de la segunda puerta restante
+    for (i in num_aleatorios){
+      if (i != num_puerta & i!=num_puerta_rest1){
+        num_puerta_rest2 = i
+      }
+    }
+  } 
+  
+  # Número de la puerta restante para el caso en que el jugador pierde
+  else {
+    for (i in num_aleatorios){
+      if (i != num_puerta & i!=num_ganador){
+        num_puerta_rest3 = i
+      }
+    }
+  }
+  
+  # El presentador destapa una puerta
+  
+  print("Veamos el contenido de una de las puertas....")
+  
+  if (num_puerta == num_ganador){
+    print(paste("La puerta número", num_puerta_rest1, "contiene una deliciosa corona cero"))
+  } else {
+    print(paste("La puerta número", num_puerta_rest3, "contiene una deliciosa corona cero"))
+  }
+  
+  # El presentador pregunta al jugador si desea cambiar de puerta
+  respuesta = askYesNo(msg = "¿Desea cambiar de puerta?")
+  
+  # Damos un mensaje
+  if (respuesta) {
+    print("Haz cambiado de número de puerta, ¡perfecto!")
+  } else {
+    print("¡Bien! no haz cambiado de número de puerta, continuemos")
+  }
+
+  if (num_puerta == num_ganador){
+    # Si el jugador cambia de puerta, entonces cambiará necesariamente al número 
+    # de puerta en num_puerta_rest2, pues ya mostramos anteriormente el contenido
+    # de la puerta con número almacenado en num_puerta_rest1
+    
+    
+    if(respuesta){
+      num_puerta = num_puerta_rest2
+      print(paste("Ahora, tu número de puerta es:", num_puerta))
+    }
+  } else {
+    # Si el jugador cambia de puerta, entonces cambiará necesariamente a la puerta
+    # ganadora pues, en este caso, ya mostramos el contenido de la puerta con 
+    # número almacenado en num_puerta_rest3
+    
+    if (respuesta){
+      num_puerta = num_ganador
+      print(paste("Ahora, tu número de puerta es:", num_puerta))
+    }
+  }
+  
+  # El jugador sabrá si ganó o perdió
+  print("Procedamos a destapar la puerta ganadora....")
+
+  if (num_puerta == num_ganador){
+    print(paste("La puerta ganadora es:", num_ganador, "¡felicidades, has ganado!"))
+  }
+  else {
+    print(paste("La puerta ganadora es la número", num_ganador, "lamentablemente haz perdido"))
+  }
+}
+```
+
+
+y hagamos algunas simulaciones del juego:
+
+1. En esta ronda de juego no cambiaremos de número de puerta
+
+```{r}
+Monthy_Hall()
+```
+
+y hemos perdido.
+
+2. En esta ronda de juego no cambiaremos de número de puerta
+
+```{r}
+Monthy_Hall()
+```
+
+y hemos ganado.
+
+3. En esta ronda de juego cambiaremos de número de puerta
+
+
+```{r}
+Monthy_Hall()
+```
+
+y hemos perdido.
+
+4. En esta ronda de juego cambiaremos de número de puerta
+
+```{r}
+Monthy_Hall()
+```
+
+y hemos perdido.
+
+---
+
+Vale la pena resaltar que, cuando cambiamos de puerta en el juego, aumentan las probabilidades de que ganemos versus a continuar en el juego sin cambiar de puerta. Lo anterior se pudo notar al tener que simular seis veces el punto 4. hasta obtener que el jugador perdió, es decir, en 5 simulaciones el jugador gano siempre que cambio de número de puerta.  
+
+
+
+
