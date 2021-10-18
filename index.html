@@ -11,7 +11,7 @@
 
 
 
-<title>P1.knit</title>
+<title>uwu</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -365,21 +365,621 @@ pre code {
 
 
 <div id="tarea-1" class="section level1">
+
 <button type="button" class="btn btn-dark" onclick="cambiarModo()">Oscuro / Claro</button>
-<h1>Tarea 1</h1>
+<center>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Escudo-facultad-ciencias-unam-escalable.svg/896px-Escudo-facultad-ciencias-unam-escalable.svg.png" class="img_cuatro">
+</center>
+<hr>
+
+<center>
+
+<h1>Inferencia estadística</h1>
+<h2>Tarea 1</h2>
+<h2>Profesor: &#128151 Jaime Vázquez Alamilla &#128151</h2>
+<h2>Ayudante: &#128170 Alejandro Cuevas &#128170 </h2>
+</center>
+
+<hr>
+
+<h3>Integrantes: </h3>
 <ul>
 <big>
 <li>
-Luis Fernando Apáez Álvarez
+Casandra Sofía Pejcovich
 </li>
 <li>
-Carlos Luna
+Carlos Luna Hernández
+</li>
+<li>
+Aldo Enrique Chong Valentín
+</li>
+<li>
+Luis Fernando Apáez Álvarez
 </li>
 </big>
 </ul>
-<ol start="2" style="list-style-type: decimal">
-<li>Escriba una función que se llame <em>truncar</em> como se especifica en la tarea.</li>
-</ol>
+<div id="índice" class="section level2">
+<h2>Índice</h2>
+<ul>
+<a href="#p1">
+<li>
+Pregunta 1
+</li>
+</a>
+<ul>
+<a href="#ia">
+<li>
+Inciso a)
+</li>
+</a> <a href="#ib">
+<li>
+Inciso b)
+</li>
+</a> <a href="#ic">
+<li>
+Inciso c)
+</li>
+</a> <a href="#id">
+<li>
+Inciso d)
+</li>
+</a> <a href="#ie">
+<li>
+Inciso e)
+</li>
+</a> <a href="#if">
+<li>
+Inciso f)
+</li>
+</a> <a href="#ig">
+<li>
+Inciso g)
+</li>
+</a>
+</ul>
+<a href="#p2">
+<li>
+Pregunta 2
+</li>
+</a> <a href="#p3">
+<li>
+Pregunta 3
+</li>
+</a>
+</ul>
+</div>
+<div id="pregunta-1-trabajar-con-el-dataset-planes-de-la-librería-nycflights13" class="section level2">
+<h2>Pregunta 1: Trabajar con el dataset <strong>planes</strong> de la librería <strong>nycflights13</strong>: <a id="p1"></a></h2>
+<p>Comenzaremos por llamar a las librerías necesarias</p>
+<pre class="r"><code>inst_dplyr &lt;- require(&#39;dplyr&#39;)
+inst_ggplot2 &lt;- require(&#39;ggplot2&#39;)
+inst_nycflights13 &lt;- require(&#39;nycflights13&#39;)</code></pre>
+<p>procedemos a revisar que los paquetes estén cargados correctamente</p>
+<pre class="r"><code>inst_correcta &lt;- c(inst_dplyr, inst_ggplot2, inst_nycflights13)
+inst_correcta</code></pre>
+<pre><code>## [1] TRUE TRUE TRUE</code></pre>
+<p>y revisamos que los paquetes estén en nuestra lista de búsqueda actual</p>
+<pre class="r"><code>search()</code></pre>
+<pre><code>##  [1] &quot;.GlobalEnv&quot;           &quot;package:nycflights13&quot; &quot;package:ggplot2&quot;     
+##  [4] &quot;package:dplyr&quot;        &quot;package:stats&quot;        &quot;package:graphics&quot;    
+##  [7] &quot;package:grDevices&quot;    &quot;package:utils&quot;        &quot;package:datasets&quot;    
+## [10] &quot;package:methods&quot;      &quot;Autoloads&quot;            &quot;package:base&quot;</code></pre>
+<p>Ahora bien, pasemos a resolver cada uno de los incisos de este primer ejercicio:</p>
+<div id="inciso-a" class="section level3">
+<h3>Inciso <em>a)</em> <a id="ia"></a></h3>
+<p>EL número de columnas que tiene la tabla está dado por el número</p>
+<pre class="r"><code>col_planes &lt;- ncol(planes)
+print(paste(&quot;Número de columnas:&quot;, col_planes))</code></pre>
+<pre><code>## [1] &quot;Número de columnas: 9&quot;</code></pre>
+<p>luego, para conocer el número de registro multiplicamos el número de filas por el número de columnas</p>
+<pre class="r"><code># Conocemos primero el número de filas
+row_planes &lt;- nrow(planes)
+
+# Calculamos
+num_registros &lt;- col_planes * row_planes
+print(paste(&quot;El número de registros es de:&quot;, num_registros))</code></pre>
+<pre><code>## [1] &quot;El número de registros es de: 29898&quot;</code></pre>
+</div>
+<div id="inciso-b" class="section level3">
+<h3>Inciso b) <a id="ib"></a></h3>
+<p>Asignamos a cada vector la descripción de la variable en cada columna</p>
+<pre class="r"><code>col_1 &lt;- &quot;el número de cola (tail number)&quot;
+col_2 &lt;- &quot;el año de fabricaciÃ³n (year manufactured)&quot;
+col_3 &lt;- &quot;el tipo de avión (type of plane)&quot;
+col_4 &lt;- &quot;el fabricante (manufacturer)&quot;
+col_5 &lt;- &quot;el modelo (model)&quot;
+col_6 &lt;- &quot;el número de motores (number of engines)&quot;
+col_7 &lt;- &quot;el número de asientos (number of seats)&quot;
+col_8 &lt;- &quot;la velocidad crucero promedio en millas por hora (average crusing speed in mph)&quot;
+col_9 &lt;- &quot;el tipo de motor (type of engine)&quot;</code></pre>
+<p>Concatenamos por fila los vectores anteriores en una matriz que podamos mandar llamar</p>
+<pre class="r"><code>matriz_desc &lt;- rbind(col_1,col_2,col_3,col_4,col_5,col_6,col_7,col_8,col_9)
+matriz_desc</code></pre>
+<pre><code>##       [,1]                                                                             
+## col_1 &quot;el número de cola (tail number)&quot;                                                
+## col_2 &quot;el año de fabricaciÃ³n (year manufactured)&quot;                                     
+## col_3 &quot;el tipo de avión (type of plane)&quot;                                               
+## col_4 &quot;el fabricante (manufacturer)&quot;                                                   
+## col_5 &quot;el modelo (model)&quot;                                                              
+## col_6 &quot;el número de motores (number of engines)&quot;                                       
+## col_7 &quot;el número de asientos (number of seats)&quot;                                        
+## col_8 &quot;la velocidad crucero promedio en millas por hora (average crusing speed in mph)&quot;
+## col_9 &quot;el tipo de motor (type of engine)&quot;</code></pre>
+<p>y creamos una lista con los tipos de datos</p>
+<pre class="r"><code>tipodato_col &lt;- lapply(planes, class)
+tipodato_col</code></pre>
+<pre><code>## $tailnum
+## [1] &quot;character&quot;
+## 
+## $year
+## [1] &quot;integer&quot;
+## 
+## $type
+## [1] &quot;character&quot;
+## 
+## $manufacturer
+## [1] &quot;character&quot;
+## 
+## $model
+## [1] &quot;character&quot;
+## 
+## $engines
+## [1] &quot;integer&quot;
+## 
+## $seats
+## [1] &quot;integer&quot;
+## 
+## $speed
+## [1] &quot;integer&quot;
+## 
+## $engine
+## [1] &quot;character&quot;</code></pre>
+<p>Después, creamos una función que concatene texto y los datos: numero de columna, nombre de la columna del dataframe planes, descripcion de los valores que almacena y tipo de dato que contiene; para cada una de las 9 columnas</p>
+<pre class="r"><code>fun1 &lt;- function() {
+  for (i in 1:col_planes) {
+    print(paste(&quot;Col&quot;,i,&quot;:&quot;,&quot;&#39;&quot;,colnames(planes)[i],&quot;&#39;&quot;,&quot;representa&quot;,matriz_desc[i],&quot;y es 
+                de tipo&quot;,tipodato_col[i]))
+  }
+}
+
+fun1()</code></pre>
+</div>
+<div id="inciso-c" class="section level3">
+<h3>Inciso c) <a id="ic"></a></h3>
+<p>Comenzamos creando un factor de la columna Manufacturer del dataframe <code>planes</code></p>
+<pre class="r"><code>planes_factor &lt;- factor(planes$manufacturer)</code></pre>
+<p>Gracias a la estructura de los factores, podemos hallar los registros distintos entre el total de filas con</p>
+<pre class="r"><code>levels(planes_factor)</code></pre>
+<pre><code>##  [1] &quot;AGUSTA SPA&quot;                    &quot;AIRBUS&quot;                       
+##  [3] &quot;AIRBUS INDUSTRIE&quot;              &quot;AMERICAN AIRCRAFT INC&quot;        
+##  [5] &quot;AVIAT AIRCRAFT INC&quot;            &quot;AVIONS MARCEL DASSAULT&quot;       
+##  [7] &quot;BARKER JACK L&quot;                 &quot;BEECH&quot;                        
+##  [9] &quot;BELL&quot;                          &quot;BOEING&quot;                       
+## [11] &quot;BOMBARDIER INC&quot;                &quot;CANADAIR&quot;                     
+## [13] &quot;CANADAIR LTD&quot;                  &quot;CESSNA&quot;                       
+## [15] &quot;CIRRUS DESIGN CORP&quot;            &quot;DEHAVILLAND&quot;                  
+## [17] &quot;DOUGLAS&quot;                       &quot;EMBRAER&quot;                      
+## [19] &quot;FRIEDEMANN JON&quot;                &quot;GULFSTREAM AEROSPACE&quot;         
+## [21] &quot;HURLEY JAMES LARRY&quot;            &quot;JOHN G HESS&quot;                  
+## [23] &quot;KILDALL GARY&quot;                  &quot;LAMBERT RICHARD&quot;              
+## [25] &quot;LEARJET INC&quot;                   &quot;LEBLANC GLENN T&quot;              
+## [27] &quot;MARZ BARRY&quot;                    &quot;MCDONNELL DOUGLAS&quot;            
+## [29] &quot;MCDONNELL DOUGLAS AIRCRAFT CO&quot; &quot;MCDONNELL DOUGLAS CORPORATION&quot;
+## [31] &quot;PAIR MIKE E&quot;                   &quot;PIPER&quot;                        
+## [33] &quot;ROBINSON HELICOPTER CO&quot;        &quot;SIKORSKY&quot;                     
+## [35] &quot;STEWART MACO&quot;</code></pre>
+<p>Luego, comprobamos que lo anterior es un vector de longitud <code>[1:35]</code></p>
+<pre class="r"><code>str(levels(planes_factor))</code></pre>
+<pre><code>##  chr [1:35] &quot;AGUSTA SPA&quot; &quot;AIRBUS&quot; &quot;AIRBUS INDUSTRIE&quot; ...</code></pre>
+<p>De nuevo, aprovechando la creaciÃ³n del vector, usamos función <code>summary</code> para contabilizar el número de registros por nivel</p>
+<pre class="r"><code>summary(planes_factor)</code></pre>
+<pre><code>##                    AGUSTA SPA                        AIRBUS 
+##                             1                           336 
+##              AIRBUS INDUSTRIE         AMERICAN AIRCRAFT INC 
+##                           400                             2 
+##            AVIAT AIRCRAFT INC        AVIONS MARCEL DASSAULT 
+##                             1                             1 
+##                 BARKER JACK L                         BEECH 
+##                             1                             2 
+##                          BELL                        BOEING 
+##                             2                          1630 
+##                BOMBARDIER INC                      CANADAIR 
+##                           368                             9 
+##                  CANADAIR LTD                        CESSNA 
+##                             1                             9 
+##            CIRRUS DESIGN CORP                   DEHAVILLAND 
+##                             1                             1 
+##                       DOUGLAS                       EMBRAER 
+##                             1                           299 
+##                FRIEDEMANN JON          GULFSTREAM AEROSPACE 
+##                             1                             2 
+##            HURLEY JAMES LARRY                   JOHN G HESS 
+##                             1                             1 
+##                  KILDALL GARY               LAMBERT RICHARD 
+##                             1                             1 
+##                   LEARJET INC               LEBLANC GLENN T 
+##                             1                             1 
+##                    MARZ BARRY             MCDONNELL DOUGLAS 
+##                             1                           120 
+## MCDONNELL DOUGLAS AIRCRAFT CO MCDONNELL DOUGLAS CORPORATION 
+##                           103                            14 
+##                   PAIR MIKE E                         PIPER 
+##                             1                             5 
+##        ROBINSON HELICOPTER CO                      SIKORSKY 
+##                             1                             1 
+##                  STEWART MACO 
+##                             2</code></pre>
+<p>Comprobamos que lo anterior también es un vector de long <code>[1:35]</code></p>
+<pre class="r"><code>str(summary(planes_factor))</code></pre>
+<pre><code>##  Named int [1:35] 1 336 400 2 1 1 1 2 2 1630 ...
+##  - attr(*, &quot;names&quot;)= chr [1:35] &quot;AGUSTA SPA&quot; &quot;AIRBUS&quot; &quot;AIRBUS INDUSTRIE&quot; &quot;AMERICAN AIRCRAFT INC&quot; ...</code></pre>
+<p>Creamos un dataframe (tibble) que se alimente de los niveles y del número de registros por cada uno de estos</p>
+<pre class="r"><code>planes_tibble &lt;- tibble(m = levels(planes_factor), r = summary(planes_factor))
+planes_tibble</code></pre>
+<pre><code>## # A tibble: 35 x 2
+##    m                          r
+##    &lt;chr&gt;                  &lt;int&gt;
+##  1 AGUSTA SPA                 1
+##  2 AIRBUS                   336
+##  3 AIRBUS INDUSTRIE         400
+##  4 AMERICAN AIRCRAFT INC      2
+##  5 AVIAT AIRCRAFT INC         1
+##  6 AVIONS MARCEL DASSAULT     1
+##  7 BARKER JACK L              1
+##  8 BEECH                      2
+##  9 BELL                       2
+## 10 BOEING                  1630
+## # ... with 25 more rows</code></pre>
+<p>Guardamos en una variable, el tibble organizado de manera descendiente sobre los registros</p>
+<pre class="r"><code>planes_desc &lt;- arrange(planes_tibble, desc(r))
+planes_desc</code></pre>
+<pre><code>## # A tibble: 35 x 2
+##    m                                 r
+##    &lt;chr&gt;                         &lt;int&gt;
+##  1 BOEING                         1630
+##  2 AIRBUS INDUSTRIE                400
+##  3 BOMBARDIER INC                  368
+##  4 AIRBUS                          336
+##  5 EMBRAER                         299
+##  6 MCDONNELL DOUGLAS               120
+##  7 MCDONNELL DOUGLAS AIRCRAFT CO   103
+##  8 MCDONNELL DOUGLAS CORPORATION    14
+##  9 CANADAIR                          9
+## 10 CESSNA                            9
+## # ... with 25 more rows</code></pre>
+<p>Creamos un nuevo tibble que sólo tome las primeras 3 filas del tibble anterior en orden descendiente</p>
+<pre class="r"><code>gg_tibble &lt;- tibble(Fa = planes_desc$m[c(1,2,3)], Registros = planes_desc$r[c(1,2,3)])</code></pre>
+<p>Asignamos a un vector el “orden descendiente” por medio de la función <code>levels</code> aplicada sobre un factor</p>
+<pre class="r"><code>Fabricantes &lt;- factor(gg_tibble$Fa, level =  planes_desc$m[c(1,2,3)])
+
+# Creamos el vector que almacena los colores para la grafica
+
+colors &lt;- c(&quot;#845EC2&quot;, &quot;#D65DB1&quot;,&quot;#FF9671&quot;)</code></pre>
+<p>Graficamos un barplot con las tres manufactureras con más sregistros en la tabla, en orden descendente</p>
+<pre class="r"><code>ggplot( data = gg_tibble, mapping = aes(x= Fabricantes, y = Registros)) +
+  geom_bar(stat = &quot;identity&quot;, fill = colors)</code></pre>
+<p><img src="data:image/png;base64,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SG3R/z9cgN4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SUijQXtVVM6a27Ku7Zkht0VdXzZj6ayjiHqi7tuyru2ZIbdFXV82YektI4R5o71WvrpoxtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3hChQRG3ZV3fNkNqir66aMfWWEAWKqC376q4ZUlv01VUzpt4SokARtWVf3TVDaou+umrG1FtCFCiituyru2ZIbdFXV82YekuIAkXUln111wypLfrqqhlTbwlRoIjasq/umiG1RV9dNWPqLSEKFFFb9tVdM6S26KurZky9JUSBImrLvrprhtQWfXXVjKm3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" width="672" /></p>
+</div>
+<div id="inciso-d" class="section level3">
+<h3>Inciso d) <a id="id"></a></h3>
+<p>Comenzamos por filtrar los datos por año hasta 1983</p>
+<pre class="r"><code># Filtro:
+filter1 &lt;- planes %&gt;%
+  filter(year &lt;= 1983)
+
+# Imprimimos nuestro nuevo dataset
+filter1</code></pre>
+<pre><code>## # A tibble: 30 x 9
+##    tailnum  year type          manufacturer model   engines seats speed engine  
+##    &lt;chr&gt;   &lt;int&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;     &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;   
+##  1 N14629   1965 Fixed wing m~ BOEING       737-524       2   149    NA Turbo-f~
+##  2 N201AA   1959 Fixed wing s~ CESSNA       150           1     2    90 Recipro~
+##  3 N202AA   1980 Fixed wing m~ CESSNA       421C          2     8    90 Recipro~
+##  4 N350AA   1980 Fixed wing m~ PIPER        PA-31-~       2     8   162 Recipro~
+##  5 N364AA   1973 Fixed wing m~ CESSNA       310Q          2     6   167 Recipro~
+##  6 N376AA   1978 Fixed wing s~ PIPER        PA-32R~       1     7    NA Recipro~
+##  7 N378AA   1963 Fixed wing s~ CESSNA       172E          1     4   105 Recipro~
+##  8 N381AA   1956 Fixed wing m~ DOUGLAS      DC-7BF        4   102   232 Recipro~
+##  9 N383AA   1972 Fixed wing m~ BEECH        E-90          2    10    NA Turbo-p~
+## 10 N425AA   1968 Fixed wing s~ PIPER        PA-28-~       1     4   107 Recipro~
+## # ... with 20 more rows</code></pre>
+<p>Generamos el diagrama boxplot que toma valores del dataframe con años de fabricación mayores o iguales a 1983, donde el eje de las <span class="math inline">\(x\)</span> represente los años y el eje <span class="math inline">\(y\)</span>, la velocidad crucero promedio a mph</p>
+<pre class="r"><code>ggplot(data = filter1, mapping = aes (x = factor(year), y = speed)) +
+  geom_boxplot() +labs(x= &quot;Año de fabricación&quot;, y = &quot;Velocidad crucero promedio (mph)&quot;)</code></pre>
+<pre><code>## Warning: Removed 7 rows containing non-finite values (stat_boxplot).</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+<p>Acotamos el numero de columnas del dataframe filtrado por <code>año &gt;= 1983</code> con tal de que tenga solo la información que nos interesa</p>
+<pre class="r"><code>df1 &lt;- data.frame(year = filter1$year, speed =filter1$speed)
+df1</code></pre>
+<pre><code>##    year speed
+## 1  1965    NA
+## 2  1959    90
+## 3  1980    90
+## 4  1980   162
+## 5  1973   167
+## 6  1978    NA
+## 7  1963   105
+## 8  1956   232
+## 9  1972    NA
+## 10 1968   107
+## 11 1975   112
+## 12 1979    NA
+## 13 1983   127
+## 14 1980   162
+## 15 1976   126
+## 16 1959    95
+## 17 1963    NA
+## 18 1979   432
+## 19 1967   202
+## 20 1975   108
+## 21 1975   432
+## 22 1976    NA
+## 23 1977   105
+## 24 1976   432
+## 25 1977   432
+## 26 1978   432
+## 27 1979   432
+## 28 1979   432
+## 29 1980   432
+## 30 1974    NA</code></pre>
+<p>Mandamos llamar sólo a la columna que corresponde a los años, Observamos que hay años que aparecen más de una vez. Además, creamos un factor a partir del vector df1 (años) y aPlicamos la función <code>levels()</code> para que regrese los años únicos</p>
+<pre class="r"><code># mandamos a llamar a la columna correspondiente de los años
+df1$year</code></pre>
+<pre><code>##  [1] 1965 1959 1980 1980 1973 1978 1963 1956 1972 1968 1975 1979 1983 1980 1976
+## [16] 1959 1963 1979 1967 1975 1975 1976 1977 1976 1977 1978 1979 1979 1980 1974</code></pre>
+<pre class="r"><code># creamos un factor y aplicamos la función levels
+niv &lt;- levels(factor(df1$year))
+niv</code></pre>
+<pre><code>##  [1] &quot;1956&quot; &quot;1959&quot; &quot;1963&quot; &quot;1965&quot; &quot;1967&quot; &quot;1968&quot; &quot;1972&quot; &quot;1973&quot; &quot;1974&quot; &quot;1975&quot;
+## [11] &quot;1976&quot; &quot;1977&quot; &quot;1978&quot; &quot;1979&quot; &quot;1980&quot; &quot;1983&quot;</code></pre>
+<p>Como la funcion level nos regresa un vector con entradas de tipo <code>&lt;char&gt;</code> Usamos <code>lapply</code> para aplicar a cada entrada del vector una funcion que convierta los <code>&lt;char&gt;</code> en <code>&lt;int&gt;</code>. Notemos que <code>lapply()</code> regresa una LISTA con entradas tipo <code>&lt;int&gt;</code></p>
+<pre class="r"><code>niv1 &lt;- lapply(niv, as.integer)
+niv1</code></pre>
+<pre><code>## [[1]]
+## [1] 1956
+## 
+## [[2]]
+## [1] 1959
+## 
+## [[3]]
+## [1] 1963
+## 
+## [[4]]
+## [1] 1965
+## 
+## [[5]]
+## [1] 1967
+## 
+## [[6]]
+## [1] 1968
+## 
+## [[7]]
+## [1] 1972
+## 
+## [[8]]
+## [1] 1973
+## 
+## [[9]]
+## [1] 1974
+## 
+## [[10]]
+## [1] 1975
+## 
+## [[11]]
+## [1] 1976
+## 
+## [[12]]
+## [1] 1977
+## 
+## [[13]]
+## [1] 1978
+## 
+## [[14]]
+## [1] 1979
+## 
+## [[15]]
+## [1] 1980
+## 
+## [[16]]
+## [1] 1983</code></pre>
+<p>Luego:</p>
+<ul>
+<li>Crear un dataframe vacio <code>df3 &lt;- data.frame()</code>.</li>
+<li>Creamos un ciclo <code>for</code> tal que, para cada año en la lista de años únicos <code>niv1</code>.</li>
+<li>creamos un nuevo dataframe que filtre el dataframe acotado <code>df1</code> para que solonos regrese las velocidades asociadas a ese año particular.</li>
+<li>Estando en ese nuevo dataframe acotado y filtrado por años, calculamos la varianza de los valores de velocidad y la guardamos en la variable <code>i</code>.</li>
+<li>Le pediremos que elimine del cálculo los valores <code>NA</code>.</li>
+<li>Creamos un vector que incluya el año por el que estamos filtrando, la mediana de las velocidades de ese año y la varianza de ese año almacenada en <code>i</code> (para esta iteración).</li>
+<li>Pegamos ese vector como un nuevo renglón del dataframe vacio <code>df3</code> # Reescribimos sobre <code>df3</code> para que guarde los registros de cada iteración.</li>
+</ul>
+<p>Lo anterior se traduce en código como</p>
+<pre class="r"><code># Dataframe vacío
+df3 &lt;- data.frame()
+
+# ciclo form
+for(fecha in niv1){
+  filtro &lt;- df1 %&gt;%
+    filter(year == fecha)
+  i &lt;- var(filtro$speed, na.rm = TRUE)
+  df3 &lt;- rbind(df3,c(fecha,median(filtro$speed, na.rm = TRUE),i))
+}
+
+# Mandamos llamar a df3 para verificar los registros
+df3</code></pre>
+<pre><code>##    X1956  X232 NA_real_.
+## 1   1956 232.0        NA
+## 2   1959  92.5     12.50
+## 3   1963 105.0        NA
+## 4   1965    NA        NA
+## 5   1967 202.0        NA
+## 6   1968 107.0        NA
+## 7   1972    NA        NA
+## 8   1973 167.0        NA
+## 9   1974    NA        NA
+## 10  1975 112.0  34565.33
+## 11  1976 279.0  46818.00
+## 12  1977 268.5  53464.50
+## 13  1978 432.0        NA
+## 14  1979 432.0      0.00
+## 15  1980 162.0  22761.00
+## 16  1983 127.0        NA</code></pre>
+<p>continuando</p>
+<pre class="r"><code># Renombramos las columnas de df3 para que reflejen lo que almacenan
+colnames(df3) &lt;- c(&quot;año&quot;,&quot;mediana&quot;,&quot;varianza&quot;)
+
+# Ordenamos sobre la varianza de forma desc a df3 y guardamos en un nuevo 
+# dataframe df4
+df4 &lt;- df3[order(df3[,3], decreasing = TRUE),]
+
+# Almacenamos en dataframe df5 sólo los primeros 4 registros con mayor varianza
+df5 &lt;- df4[1:4,]
+
+# Ordenamos sobre mediana de forma desc a df5 y guardamos en dataframe df6
+df6 &lt;- df5[order(df5[,2], decreasing = TRUE),]</code></pre>
+<p>Finalmente, guardamos en una nueva variable solo los años ordenados sobre mediana de forma desc</p>
+<pre class="r"><code>inciso_d &lt;- df6[,1]
+
+# Veamos el resultado final buscado en este inciso
+
+print(&quot;De las 4 cajas con más registros, los años de mayor mediana en la velocidad, en orden descendiente son:&quot;)</code></pre>
+<pre><code>## [1] &quot;De las 4 cajas con más registros, los años de mayor mediana en la velocidad, en orden descendiente son:&quot;</code></pre>
+<pre class="r"><code>inciso_d</code></pre>
+<pre><code>## [1] 1976 1977 1980 1975</code></pre>
+</div>
+<div id="inciso-e" class="section level3">
+<h3>Inciso e) <a id="ie"></a></h3>
+<p>Buscamos el máximo valor de la columna varianza en el dataframe <code>df6</code></p>
+<pre class="r"><code>max(df6[,3])</code></pre>
+<pre><code>## [1] 53464.5</code></pre>
+<p>Guardamos en un dataframe <code>df7</code> un filtro de <code>df6</code> tal que busque el máximo valor de varianza en la tercera columna de <code>df6</code>y guardamos sólo la(s) coincidencia(s)</p>
+<pre class="r"><code>df7 &lt;- df6 %&gt;%
+filter(df6[,3]==max(df6[,3]))
+df7</code></pre>
+<pre><code>##    año mediana varianza
+## 1 1977   268.5  53464.5</code></pre>
+<p>teniendo así como resultado final</p>
+<pre class="r"><code>print(paste(&quot;El año con mayor varianza es&quot;,df7[1,1],&quot;.&quot;))</code></pre>
+<pre><code>## [1] &quot;El año con mayor varianza es 1977 .&quot;</code></pre>
+</div>
+<div id="inciso-f" class="section level3">
+<h3>Inciso f) <a id="if"></a></h3>
+<p>Filtramos los datos deseados</p>
+<pre class="r"><code>Aviones_BOEING&lt;- planes %&gt;%
+  filter(manufacturer == &quot;BOEING&quot;) 
+glimpse(Aviones_BOEING)</code></pre>
+<pre><code>## Rows: 1,630
+## Columns: 9
+## $ tailnum      &lt;chr&gt; &quot;N11206&quot;, &quot;N1200K&quot;, &quot;N1201P&quot;, &quot;N12109&quot;, &quot;N12114&quot;, &quot;N12...
+## $ year         &lt;int&gt; 2000, 1998, 1998, 1994, 1995, 1996, 1998, 1987, 1998, ...
+## $ type         &lt;chr&gt; &quot;Fixed wing multi engine&quot;, &quot;Fixed wing multi engine&quot;, ...
+## $ manufacturer &lt;chr&gt; &quot;BOEING&quot;, &quot;BOEING&quot;, &quot;BOEING&quot;, &quot;BOEING&quot;, &quot;BOEING&quot;, &quot;BOE...
+## $ model        &lt;chr&gt; &quot;737-824&quot;, &quot;767-332&quot;, &quot;767-332&quot;, &quot;757-224&quot;, &quot;757-224&quot;,...
+## $ engines      &lt;int&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, ...
+## $ seats        &lt;int&gt; 149, 330, 330, 178, 178, 178, 178, 330, 149, 149, 149,...
+## $ speed        &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...
+## $ engine       &lt;chr&gt; &quot;Turbo-fan&quot;, &quot;Turbo-fan&quot;, &quot;Turbo-fan&quot;, &quot;Turbo-jet&quot;, &quot;T...</code></pre>
+<p>Ahora procederemos a usar la funcion stem para realizar el diagrama de tallo y hojas</p>
+<pre class="r"><code>Asientos &lt;-Aviones_BOEING$seats
+inciso_f &lt;- stem(Asientos)</code></pre>
+<pre><code>## 
+##   The decimal point is 1 digit(s) to the right of the |
+## 
+##   10 | 00000000000000000000000000000000000000000000000000000000000000000000+8
+##   12 | 8
+##   14 | 00000000000000000000000000000000000000000000000000000000000000000000+793
+##   16 | 88888888888888888888888888888888888888888888888888888888888888888888+203
+##   18 | 99999999999999999999999999999999999999999999999999999999999999999999+80
+##   20 | 
+##   22 | 2222222222222
+##   24 | 5555555555555555
+##   26 | 000095555555555555555555555555
+##   28 | 0000002222222222222222
+##   30 | 00000000000000000
+##   32 | 00000000000000000000000000000000000000000000000000000000000000000000+34
+##   34 | 
+##   36 | 
+##   38 | 
+##   40 | 000000000000
+##   42 | 
+##   44 | 0</code></pre>
+</div>
+<div id="inciso-g" class="section level3">
+<h3>Inciso g) <a id="ig"></a></h3>
+<p><em>i)</em> Procedemos a sacar el Rango muestral o Rango</p>
+<pre class="r"><code>max(Aviones_BOEING$seats)-min(Aviones_BOEING$seats)</code></pre>
+<pre><code>## [1] 350</code></pre>
+<p><em>ii)</em> y <em>iii)</em> Para ello</p>
+<pre class="r"><code># Media
+esp &lt;- mean(Aviones_BOEING$seats)
+
+#Continuamos con la  varianza y la desviacion estandar
+varian &lt;-var(Aviones_BOEING$seats)
+desvi_estan &lt;-sd(Aviones_BOEING$seats)</code></pre>
+<p>de donde</p>
+<pre class="r"><code>paste(&quot;Media:&quot;, esp, &quot;Varianza:&quot;,varian,&quot;Desviación est:&quot;,desvi_estan)</code></pre>
+<pre><code>## [1] &quot;Media: 175.18773006135 Varianza: 3536.53932142494 Desviación est: 59.4688096519927&quot;</code></pre>
+<p><em>iv)</em> Procedemos con os cuartiles y el rango intercuartil.</p>
+<pre class="r"><code># Cuartiles
+
+quantile(Aviones_BOEING$seats, 0.25) </code></pre>
+<pre><code>## 25% 
+## 140</code></pre>
+<pre class="r"><code>quantile(Aviones_BOEING$seats, 0.75)</code></pre>
+<pre><code>## 75% 
+## 178</code></pre>
+<p>y el rango intercuantil</p>
+<pre class="r"><code>IQR(Aviones_BOEING$seats)</code></pre>
+<pre><code>## [1] 38</code></pre>
+<p>o, alternativamente</p>
+<pre class="r"><code>quantile(Aviones_BOEING$seats, 0.75)-quantile(Aviones_BOEING$seats, 0.25) </code></pre>
+<pre><code>## 75% 
+##  38</code></pre>
+<p><em>v)</em> El sesgo y su interpretación, para ello debemos cargar el paquete <code>e1071</code>, una vez hecho procedemos.</p>
+<pre class="r"><code>library(e1071)</code></pre>
+<p>Comenzamos con el sesgo</p>
+<pre class="r"><code>sesgo &lt;- skewness(Aviones_BOEING$seats)</code></pre>
+<p>y para la interpretación correspondiente creamos la siguiente función</p>
+<pre class="r"><code>fun_sesgo &lt;- function(x){
+  if(x&gt;0){
+  var &lt;- &quot;existen muchos valores en la muestra que son mayores que la media, i.e.,la distribución estÃ¡ concentrada a la izquierda&quot;
+  }
+  else if(x&lt;0){
+  var &lt;- &quot;existen muchos valores en la muestra que son menores que la media, i.e.,la distribución está concentrada a la derecha&quot;
+  }
+  print(paste(&quot;El sesgo es:&quot;,x))
+  print(paste(&quot;Implica que&quot;,var))
+}
+
+# de modo que 
+fun_sesgo(sesgo)</code></pre>
+<pre><code>## [1] &quot;El sesgo es: 1.81427613383934&quot;
+## [1] &quot;Implica que existen muchos valores en la muestra que son mayores que la media, i.e.,la distribución estÃ¡ concentrada a la izquierda&quot;</code></pre>
+<p><em>vi)</em> La curtosis y su interpretacion. De manera análoga al inciso anterior,, escribimos</p>
+<pre class="r"><code>  kurtosis &lt;-  kurtosis(Aviones_BOEING$seats)
+  
+  fun_kurt &lt;- function(x){
+    if(x&gt;0){
+      var &lt;- &quot;Es leptocúrtica, i.e., presenta decaimiento rápido con colas ligeras.&quot;
+    }
+    else if(x==0){
+      var &lt;- &quot;Es mesocúrtica, i.e., es la curva normal.&quot;
+    }
+    else{
+      var &lt;- &quot;Es platicúrtica, i.e., tiene decaimiento rápido y colas amplias.&quot;
+    }
+    print(paste(&quot;La kurtosis es:&quot;,x))
+    print(var)
+  }
+  
+# Para finalmente obtener
+fun_kurt(kurtosis)</code></pre>
+<pre><code>## [1] &quot;La kurtosis es: 2.74608521404107&quot;
+## [1] &quot;Es leptocúrtica, i.e., presenta decaimiento rápido con colas ligeras.&quot;</code></pre>
+</div>
+</div>
+<div id="pregunta-2-escriba-una-función-que-se-llame-truncar-como-se-especifica-en-la-tarea." class="section level2">
+<h2>Pregunta 2: Escriba una función que se llame <em>truncar</em> como se especifica en la tarea. <a id="p2"></a></h2>
 <p><em>Solución:</em></p>
 <ul>
 <li><p>Utilizaremos la función predefinida <code>as.integer()</code> para extraer la parte entera de un número. Así, al efectuar la diferencia entre el número y su parte entera obtendremos los decimales de dicho número, por ejemplo <span class="math inline">\(2.5421 - 2 =0.5421\)</span>. Luego, de acuerdo al número de decimales que queramos mostrar, digamos <span class="math inline">\(k\)</span>, entonces multiplicaremos dicha diferencia por <span class="math inline">\(10^k\)</span>. Por ejemplo, supongamos que queremos mostrar dos decimales de <span class="math inline">\(2.5421\)</span> (es decir, mostrar el número <span class="math inline">\(2.54\)</span>), por lo que consideraremos <span class="math inline">\(0.5421 \cdot 10^2=54.21\)</span> (es decir <code>x &lt;- (2.5421-as.integer(2.5421)) * 10 ** 2</code>) y a este resultado nuevamente le obtendremos su parte entera con <code>as.integer(x)</code>. Lo anterior nos arrojará <span class="math inline">\(54\)</span> de modo que, para obtener el resultado buscado, bastará con efectuar <span class="math inline">\(2 + \frac{54}{100}=2+\frac{54}{10^2}=2.54\)</span>, es decir <code>as.integer(2.5421) + as.integer(x / 10 ** 2)</code>.</p></li>
@@ -428,9 +1028,9 @@ truncar(pi,10)</code></pre>
 <pre><code>## [1] &quot;El número de decimales debe ser un número entero no negativo&quot;</code></pre>
 <pre class="r"><code>truncar(-97.3028101, 5)</code></pre>
 <pre><code>## [1] -97.30281</code></pre>
-<ol start="3" style="list-style-type: decimal">
-<li>Realice una función que simule el juego del Monthy Hall:</li>
-</ol>
+</div>
+<div id="pregunta-3-realice-una-función-que-simule-el-juego-del-monthy-hall" class="section level2">
+<h2>Pregunta 3: Realice una función que simule el juego del Monthy Hall: <a id="p3"></a></h2>
 <p><em>Solución:</em></p>
 <p>La función que crearemos no tendrá argumentos pues el número de la puerta con la que se jugará será asignada por el presentador. Además, asignaremos de manera aleatoria el número entero entre 1 y 3 de la puerta que contiene el Mazda 2, así como el número de puerta que le corresponde al jugador. Así</p>
 <ul>
@@ -502,10 +1102,10 @@ truncar(pi,10)</code></pre>
 
 # Invocamos la función antes creada
 Monthy_Hall()</code></pre>
-<pre><code>## [1] &quot;Te ha tocado la puerta número: 2&quot;
-## [1] &quot;El jugador ha ganado con el número de puerta: 2&quot;
-## [1] &quot;Puerta con una corona: 1&quot;
-## [1] &quot;Puerta con otra corona: 3&quot;</code></pre>
+<pre><code>## [1] &quot;Te ha tocado la puerta número: 1&quot;
+## [1] &quot;Número de puerta del jugador: 1&quot;
+## [1] &quot;Número de puerta ganadora: 2&quot;
+## [1] &quot;Puerta restante con una corona 3&quot;</code></pre>
 <p>siendo así que, en este caso, el jugador pierde.</p>
 <ul>
 <li>Lo que sigue será destapar una puerta que el presentador sabe que tiene una corona. Será necesario considerar los casos: el jugador gana o el jugador pierde. Si el jugador gana, podemos destapar cualquiera de las dos puertas <code>num_puerta_rest1</code> o <code>num_puerta_rest2</code>; si el jugador pierde debemos destapar la puerta <code>num_puerta_rest3</code>.</li>
@@ -674,23 +1274,7 @@ Monthy_Hall()</code></pre>
     print(paste(&quot;La puerta ganadora es la número&quot;, num_ganador, &quot;lamentablemente haz perdido&quot;))
   }
 }</code></pre>
-<p>y hagamos algunas simulaciones del juego:</p>
-<ol style="list-style-type: decimal">
-<li>En esta ronda de juego no cambiaremos de número de puerta</li>
-</ol>
-<pre class="r"><code>Monthy_Hall()</code></pre>
-<pre><code>## [1] &quot;Te ha tocado la puerta número: 3&quot;
-## [1] &quot;Veamos el contenido de una de las puertas....&quot;
-## [1] &quot;La puerta número 1 contiene una deliciosa corona cero&quot;
-## ¿Desea cambiar de puerta? (Yes/no/cancel) 
-## [1] &quot;Haz cambiado de número de puerta, ¡perfecto!&quot;
-## [1] &quot;Ahora, tu número de puerta es: 2&quot;
-## [1] &quot;Procedamos a destapar la puerta ganadora....&quot;
-## [1] &quot;La puerta ganadora es: 2 ¡felicidades, has ganado!&quot;</code></pre>
-<p>y hemos perdido.</p>
-<ol start="2" style="list-style-type: decimal">
-<li>En esta ronda de juego no cambiaremos de número de puerta</li>
-</ol>
+<p>Finalmente probamos el código</p>
 <pre class="r"><code>Monthy_Hall()</code></pre>
 <pre><code>## [1] &quot;Te ha tocado la puerta número: 1&quot;
 ## [1] &quot;Veamos el contenido de una de las puertas....&quot;
@@ -700,35 +1284,7 @@ Monthy_Hall()</code></pre>
 ## [1] &quot;Ahora, tu número de puerta es: 2&quot;
 ## [1] &quot;Procedamos a destapar la puerta ganadora....&quot;
 ## [1] &quot;La puerta ganadora es: 2 ¡felicidades, has ganado!&quot;</code></pre>
-<p>y hemos ganado.</p>
-<ol start="3" style="list-style-type: decimal">
-<li>En esta ronda de juego cambiaremos de número de puerta</li>
-</ol>
-<pre class="r"><code>Monthy_Hall()</code></pre>
-<pre><code>## [1] &quot;Te ha tocado la puerta número: 3&quot;
-## [1] &quot;Veamos el contenido de una de las puertas....&quot;
-## [1] &quot;La puerta número 2 contiene una deliciosa corona cero&quot;
-## ¿Desea cambiar de puerta? (Yes/no/cancel) 
-## [1] &quot;Haz cambiado de número de puerta, ¡perfecto!&quot;
-## [1] &quot;Ahora, tu número de puerta es: 1&quot;
-## [1] &quot;Procedamos a destapar la puerta ganadora....&quot;
-## [1] &quot;La puerta ganadora es: 1 ¡felicidades, has ganado!&quot;</code></pre>
-<p>y hemos perdido.</p>
-<ol start="4" style="list-style-type: decimal">
-<li>En esta ronda de juego cambiaremos de número de puerta</li>
-</ol>
-<pre class="r"><code>Monthy_Hall()</code></pre>
-<pre><code>## [1] &quot;Te ha tocado la puerta número: 3&quot;
-## [1] &quot;Veamos el contenido de una de las puertas....&quot;
-## [1] &quot;La puerta número 2 contiene una deliciosa corona cero&quot;
-## ¿Desea cambiar de puerta? (Yes/no/cancel) 
-## [1] &quot;Haz cambiado de número de puerta, ¡perfecto!&quot;
-## [1] &quot;Ahora, tu número de puerta es: 1&quot;
-## [1] &quot;Procedamos a destapar la puerta ganadora....&quot;
-## [1] &quot;La puerta ganadora es la número 3 lamentablemente haz perdido&quot;</code></pre>
-<p>y hemos perdido.</p>
-<hr />
-<p>Vale la pena resaltar que, cuando cambiamos de puerta en el juego, aumentan las probabilidades de que ganemos versus a continuar en el juego sin cambiar de puerta. Lo anterior se pudo notar al tener que simular seis veces el punto 4. hasta obtener que el jugador perdió, es decir, en 5 simulaciones el jugador gano siempre que cambio de número de puerta.</p>
+</div>
 </div>
 
 
@@ -776,14 +1332,11 @@ $(document).ready(function () {
   })();
 </script>
 
-
     <script type="text/javascript"> 
       function cambiarModo() { 
         var cuerpoweb = document.body; 
         cuerpoweb.classList.toggle("oscuro"); 
       } 
     </script>
-
-
 </body>
 </html>
