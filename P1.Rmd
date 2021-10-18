@@ -9,15 +9,450 @@ output: html_document
 
 <ul>
   <big>
+  <li>Casandra Sofía Pejcovich</li>
+  <li>Carlos Luna Hernández</li>
+  <li>Aldo Enrique Chong Valentín </li>
   <li>Luis Fernando Apáez Álvarez</li>
-  <li>Carlos Luna</li>
+  
   </big>
 </ul>
 
 \br
 \br
 
-2. Escriba una función que se llame _truncar_ como se especifica en la tarea.
+## Índice
+<ul>
+  <a href="#p1"><li>Pregunta 1</li></a>
+  <ul>
+    <a href="#ia"><li>Inciso a)</li></a>
+    <a href="#ib"><li>Inciso b)</li></a>
+    <a href="#ic"><li>Inciso c)</li></a>
+    <a href="#id"><li>Inciso d)</li></a>
+    <a href="#id"><li>Inciso e)</li></a>
+    <a href="#if"><li>Inciso f)</li></a>
+    <a href="#ig"><li>Inciso g)</li></a>
+  </ul>
+  <a href="#p2"><li>Pregunta 2</li></a>
+  <a href="#p3"><li>Pregunta 3</li></a>
+</ul>
+
+\br
+\br
+
+## Pregunta 1: Trabajar con el dataset **planes** de la librería **nycflights13**: <a id="p1"></a>
+
+Comenzaremos por llamar a las librerías necesarias
+
+```{r message=FALSE, warning=FALSE}
+inst_dplyr <- require('dplyr')
+inst_ggplot2 <- require('ggplot2')
+inst_nycflights13 <- require('nycflights13')
+```
+
+procedemos a revisar que los paquetes estén cargados correctamente
+
+```{r}
+inst_correcta <- c(inst_dplyr, inst_ggplot2, inst_nycflights13)
+inst_correcta
+```
+
+y revisamos que los paquetes estén en nuestra lista de búsqueda actual
+
+```{r}
+search()
+```
+
+Ahora bien, pasemos a resolver cada uno de los incisos de este primer ejercicio:
+
+### Inciso _a)_ <a id="ia"></a>
+
+EL número de columnas que tiene la tabla está dado por el número
+
+```{r}
+col_planes <- ncol(planes)
+print(paste("Número de columnas:", col_planes))
+```
+
+luego, para conocer el número de registro multiplicamos el número de filas por el número de columnas
+
+```{r}
+# Conocemos primero el número de filas
+row_planes <- nrow(planes)
+
+# Calculamos
+num_registros <- col_planes * row_planes
+print(paste("El número de registros es de:", num_registros))
+```
+
+### Inciso b) <a id="ib"></a>
+
+Asignamos a cada vector la descripción de la variable en cada columna
+
+```{r}
+col_1 <- "el número de cola (tail number)"
+col_2 <- "el año de fabricaciÃ³n (year manufactured)"
+col_3 <- "el tipo de avión (type of plane)"
+col_4 <- "el fabricante (manufacturer)"
+col_5 <- "el modelo (model)"
+col_6 <- "el número de motores (number of engines)"
+col_7 <- "el número de asientos (number of seats)"
+col_8 <- "la velocidad crucero promedio en millas por hora (average crusing speed in mph)"
+col_9 <- "el tipo de motor (type of engine)"
+```
+
+Concatenamos por fila los vectores anteriores en una matriz que podamos mandar llamar
+
+```{r}
+matriz_desc <- rbind(col_1,col_2,col_3,col_4,col_5,col_6,col_7,col_8,col_9)
+matriz_desc
+```
+
+y creamos una lista con los tipos de datos
+
+```{r}
+tipodato_col <- lapply(planes, class)
+tipodato_col
+```
+
+
+Después, creamos una función que concatene texto y los datos: numero de columna, nombre de la columna del dataframe planes, descripcion de los valores que almacena y tipo de dato que contiene; para cada una de las 9 columnas
+
+```{r eval=FALSE}
+fun1 <- function() {
+  for (i in 1:col_planes) {
+    print(paste("Col",i,":","'",colnames(planes)[i],"'","representa",matriz_desc[i],"y es 
+                de tipo",tipodato_col[i]))
+  }
+}
+
+fun1()
+```
+
+### Inciso c) <a id="ic"></a>
+
+Comenzamos creando un factor de la columna Manufacturer del dataframe ``planes``
+
+```{r}
+planes_factor <- factor(planes$manufacturer)
+```
+
+Gracias a la estructura de los factores, podemos hallar los registros distintos entre el total de filas con
+
+
+```{r}
+levels(planes_factor)
+```
+
+Luego, comprobamos que lo anterior es un vector de longitud ``[1:35]``
+
+```{r}
+str(levels(planes_factor))
+```
+
+De nuevo, aprovechando la creaciÃ³n del vector, usamos función ``summary`` para contabilizar el número de registros por nivel
+
+```{r}
+summary(planes_factor)
+```
+
+
+Comprobamos que lo anterior también es un vector de long ``[1:35]``
+
+```{r}
+str(summary(planes_factor))
+```
+
+Creamos un dataframe (tibble) que se alimente de los niveles y del número de registros por cada uno de estos
+
+```{r}
+planes_tibble <- tibble(m = levels(planes_factor), r = summary(planes_factor))
+planes_tibble
+```
+
+Guardamos en una variable, el tibble organizado de manera descendiente sobre los registros
+
+```{r}
+planes_desc <- arrange(planes_tibble, desc(r))
+planes_desc
+```
+
+
+Creamos un nuevo tibble que sólo tome las primeras 3 filas del tibble anterior en orden descendiente
+
+
+```{r}
+gg_tibble <- tibble(Fa = planes_desc$m[c(1,2,3)], Registros = planes_desc$r[c(1,2,3)])
+```
+
+Asignamos a un vector el "orden descendiente" por medio de la función ``levels`` aplicada sobre un factor
+
+```{r}
+Fabricantes <- factor(gg_tibble$Fa, level =  planes_desc$m[c(1,2,3)])
+
+# Creamos el vector que almacena los colores para la grafica
+
+colors <- c("#845EC2", "#D65DB1","#FF9671")
+```
+
+Graficamos un barplot con las tres manufactureras con más sregistros en la tabla, en orden descendente
+
+```{r}
+ggplot( data = gg_tibble, mapping = aes(x= Fabricantes, y = Registros)) +
+  geom_bar(stat = "identity", fill = colors)
+```
+
+
+### Inciso d) <a id="id"></a>
+
+Comenzamos por filtrar los datos por año hasta 1983
+
+```{r}
+# Filtro:
+filter1 <- planes %>%
+  filter(year <= 1983)
+
+# Imprimimos nuestro nuevo dataset
+filter1
+
+```
+
+Generamos el diagrama boxplot que toma valores del dataframe con años de fabricación mayores o iguales a 1983, donde el eje de las $x$ represente los años y el eje $y$, la velocidad crucero promedio a mph
+
+```{r}
+ggplot(data = filter1, mapping = aes (x = factor(year), y = speed)) +
+  geom_boxplot() +labs(x= "Año de fabricación", y = "Velocidad crucero promedio (mph)")
+```
+
+Acotamos el numero de columnas del dataframe filtrado por ``año >= 1983`` con tal de que tenga solo la información que nos interesa
+
+```{r}
+df1 <- data.frame(year = filter1$year, speed =filter1$speed)
+df1
+```
+
+Mandamos llamar sólo a la columna que corresponde a los años, Observamos que hay años que aparecen más de una vez. Además, creamos un factor a partir del vector df1 (años) y aPlicamos la función ``levels()`` para que regrese los años únicos
+
+```{r}
+# mandamos a llamar a la columna correspondiente de los años
+df1$year
+
+# creamos un factor y aplicamos la función levels
+niv <- levels(factor(df1$year))
+niv
+```
+
+Como la funcion level nos regresa un vector con entradas de tipo ``<char>`` Usamos ``lapply`` para aplicar a cada entrada del vector una funcion que convierta los ``<char>`` en ``<int>``. Notemos que ``lapply()`` regresa una LISTA con entradas tipo ``<int>``
+
+
+```{r}
+niv1 <- lapply(niv, as.integer)
+niv1
+```
+
+
+Luego:
+
+* Crear un dataframe vacio ``df3 <- data.frame()``.
+* Creamos un ciclo ``for`` tal que, para cada año en la lista de años únicos ``niv1``.
+* creamos un nuevo dataframe que filtre el dataframe acotado ``df1`` para que solonos regrese las velocidades asociadas a ese año particular.
+* Estando en ese nuevo dataframe acotado y filtrado por años, calculamos la varianza de los valores de velocidad y la guardamos en la variable ``i``.
+* Le pediremos que elimine del cálculo los valores ``NA``.
+* Creamos un vector que incluya el año por el que estamos filtrando, la mediana de las velocidades de ese año y la varianza de ese año almacenada en ``i`` (para esta iteración).
+* Pegamos ese vector como un nuevo renglón del dataframe vacio ``df3``
+# Reescribimos sobre ``df3`` para que guarde los registros de cada iteración.
+
+Lo anterior se traduce en código como
+
+
+```{r}
+# Dataframe vacío
+df3 <- data.frame()
+
+# ciclo form
+for(fecha in niv1){
+  filtro <- df1 %>%
+    filter(year == fecha)
+  i <- var(filtro$speed, na.rm = TRUE)
+  df3 <- rbind(df3,c(fecha,median(filtro$speed, na.rm = TRUE),i))
+}
+
+# Mandamos llamar a df3 para verificar los registros
+df3
+```
+
+continuando
+
+```{r}
+# Renombramos las columnas de df3 para que reflejen lo que almacenan
+colnames(df3) <- c("año","mediana","varianza")
+
+# Ordenamos sobre la varianza de forma desc a df3 y guardamos en un nuevo 
+# dataframe df4
+df4 <- df3[order(df3[,3], decreasing = TRUE),]
+
+# Almacenamos en dataframe df5 sólo los primeros 4 registros con mayor varianza
+df5 <- df4[1:4,]
+
+# Ordenamos sobre mediana de forma desc a df5 y guardamos en dataframe df6
+df6 <- df5[order(df5[,2], decreasing = TRUE),]
+```
+
+
+Finalmente, guardamos en una nueva variable solo los años ordenados sobre mediana de forma desc
+
+```{r}
+inciso_d <- df6[,1]
+
+# Veamos el resultado final buscado en este inciso
+
+print("De las 4 cajas con más registros, los años de mayor mediana en la velocidad, en orden descendiente son:")
+inciso_d
+```
+
+### Inciso e) <a id="ie"></a>
+
+Buscamos el máximo valor de la columna varianza en el dataframe ``df6`` 
+
+```{r}
+max(df6[,3])
+```
+
+
+Guardamos en un dataframe ``df7`` un filtro de ``df6`` tal que busque el máximo valor de varianza en la tercera columna de ``df6``y guardamos sólo la(s) coincidencia(s)
+
+```{r}
+df7 <- df6 %>%
+filter(df6[,3]==max(df6[,3]))
+df7
+```
+
+teniendo así como resultado final
+
+```{r}
+print(paste("El año con mayor varianza es",df7[1,1],"."))
+```
+
+### Inciso f) <a id="if"></a>
+
+Filtramos los datos deseados 
+
+```{r}
+Aviones_BOEING<- planes %>%
+  filter(manufacturer == "BOEING") 
+glimpse(Aviones_BOEING)
+```
+
+
+Ahora procederemos a usar la funcion stem para realizar el diagrama de tallo y hojas
+
+```{r}
+Asientos <-Aviones_BOEING$seats
+inciso_f <- stem(Asientos)
+```
+
+
+### Inciso g) <a id="ig"></a>
+
+_i)_ Procedemos a sacar el Rango muestral o Rango
+
+```{r}
+max(Aviones_BOEING$seats)-min(Aviones_BOEING$seats)
+```
+
+_ii)_ y _iii)_ Para ello
+
+```{r}
+# Media
+esp <- mean(Aviones_BOEING$seats)
+
+#Continuamos con la  varianza y la desviacion estandar
+varian <-var(Aviones_BOEING$seats)
+desvi_estan <-sd(Aviones_BOEING$seats)
+```
+
+de donde
+
+```{r}
+paste("Media:", esp, "Varianza:",varian,"Desviación est:",desvi_estan)
+```
+
+_iv)_  Procedemos con os cuartiles y el rango intercuartil.
+
+```{r}
+# Cuartiles
+
+quantile(Aviones_BOEING$seats, 0.25) 
+
+quantile(Aviones_BOEING$seats, 0.75)
+```
+
+y el rango intercuantil
+
+```{r}
+IQR(Aviones_BOEING$seats)
+```
+
+o, alternativamente
+
+```{r}
+quantile(Aviones_BOEING$seats, 0.75)-quantile(Aviones_BOEING$seats, 0.25) 
+```
+
+_v)_  El sesgo y su interpretación, para ello debemos cargar el paquete ``e1071``, una vez hecho procedemos.
+
+```{r message=FALSE, warning=FALSE}
+library(e1071)
+```
+
+Comenzamos con el sesgo
+
+```{r}
+sesgo <- skewness(Aviones_BOEING$seats)
+```
+
+y para la interpretación correspondiente creamos la siguiente función
+
+```{r}
+fun_sesgo <- function(x){
+  if(x>0){
+  var <- "existen muchos valores en la muestra que son mayores que la media, i.e.,la distribución estÃ¡ concentrada a la izquierda"
+  }
+  else if(x<0){
+  var <- "existen muchos valores en la muestra que son menores que la media, i.e.,la distribución está concentrada a la derecha"
+  }
+  print(paste("El sesgo es:",x))
+  print(paste("Implica que",var))
+}
+
+# de modo que 
+fun_sesgo(sesgo)
+```
+
+_vi)_ La curtosis y su interpretacion. De manera análoga al inciso anterior,, escribimos
+
+```{r}
+  kurtosis <-  kurtosis(Aviones_BOEING$seats)
+  
+  fun_kurt <- function(x){
+    if(x>0){
+      var <- "Es leptocúrtica, i.e., presenta decaimiento rápido con colas ligeras."
+    }
+    else if(x==0){
+      var <- "Es mesocúrtica, i.e., es la curva normal."
+    }
+    else{
+      var <- "Es platicúrtica, i.e., tiene decaimiento rápido y colas amplias."
+    }
+    print(paste("La kurtosis es:",x))
+    print(var)
+  }
+  
+# Para finalmente obtener
+fun_kurt(kurtosis)
+```
+
+
+## Pregunta 2: Escriba una función que se llame _truncar_ como se especifica en la tarea. <a id="p2"></a>
 
 _Solución:_ 
 
@@ -75,7 +510,7 @@ truncar(exp(1),-7)
 truncar(-97.3028101, 5)
 ```
 
-3. Realice una función que simule el juego del Monthy Hall:
+## Pregunta 3: Realice una función que simule el juego del Monthy Hall: <a id="p3"></a>
 
 _Solución:_
 
@@ -242,6 +677,7 @@ siendo así que, en este caso, el jugador pierde.
 El código completo de la función queda como 
 
 ```{r}
+
 Monthy_Hall <- function() {
   # Vector con 9 entradas con los números enteros del 1 al 3 
   num_aleatorios = sample(1:3, 9, replace = T)
@@ -341,45 +777,11 @@ Monthy_Hall <- function() {
 ```
 
 
-y hagamos algunas simulaciones del juego:
-
-1. En esta ronda de juego no cambiaremos de número de puerta
+Finalmente probamos el código
 
 ```{r}
 Monthy_Hall()
 ```
-
-y hemos perdido.
-
-2. En esta ronda de juego no cambiaremos de número de puerta
-
-```{r}
-Monthy_Hall()
-```
-
-y hemos ganado.
-
-3. En esta ronda de juego cambiaremos de número de puerta
-
-
-```{r}
-Monthy_Hall()
-```
-
-y hemos perdido.
-
-4. En esta ronda de juego cambiaremos de número de puerta
-
-```{r}
-Monthy_Hall()
-```
-
-y hemos perdido.
-
----
-
-Vale la pena resaltar que, cuando cambiamos de puerta en el juego, aumentan las probabilidades de que ganemos versus a continuar en el juego sin cambiar de puerta. Lo anterior se pudo notar al tener que simular seis veces el punto 4. hasta obtener que el jugador perdió, es decir, en 5 simulaciones el jugador gano siempre que cambio de número de puerta.  
-
 
 
 
