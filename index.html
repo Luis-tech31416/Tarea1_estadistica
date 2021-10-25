@@ -11,7 +11,7 @@
 
 
 
-<title>uwu</title>
+<title>UWU</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -365,7 +365,6 @@ pre code {
 
 
 <div id="tarea-1" class="section level1">
-
 <button type="button" class="btn btn-dark" onclick="cambiarModo()">Oscuro / Claro</button>
 <center>
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Escudo-facultad-ciencias-unam-escalable.svg/896px-Escudo-facultad-ciencias-unam-escalable.svg.png" class="img_cuatro">
@@ -375,14 +374,13 @@ pre code {
 <center>
 
 <h1>Inferencia estadística</h1>
-<h2>Tarea 1</h2>
+<h1>Tarea 1</h1>
 <h2>Profesor:  Jaime Vázquez Alamilla </h2>
 <h2>Ayudante:  Alejandro Cuevas  </h2>
+
 </center>
-
 <hr>
-
-<h3>Integrantes: </h3>
+<br>
 <ul>
 <big>
 <li>
@@ -424,7 +422,7 @@ Inciso c)
 <li>
 Inciso d)
 </li>
-</a> <a href="#ie">
+</a> <a href="#id">
 <li>
 Inciso e)
 </li>
@@ -1038,21 +1036,21 @@ truncar(pi,10)</code></pre>
 <p><em>Solución:</em></p>
 <p>La función que crearemos no tendrá argumentos pues el número de la puerta con la que se jugará será asignada por el presentador. Además, asignaremos de manera aleatoria el número entero entre 1 y 3 de la puerta que contiene el Mazda 2, así como el número de puerta que le corresponde al jugador. Así</p>
 <ul>
-<li><p>crearemos un vector aleatorio (digamos <code>num_aleatorios</code>) de 9 entradas (con los números 1,2 y 3) con repetición para permitir que el número de la puerta aleatoria pueda coincidir con el número de puerta asignado al jugador</p></li>
+<li><p>crearemos un vector aleatorio (digamos <code>num_aleatorios</code>) de 2 entradas (con los números entre el 1 y 3) con repetición para permitir que el número de la puerta aleatoria pueda coincidir con el número de puerta asignado al jugador</p></li>
 <li><p>creamos 3 variables auxiliares para determinar el número de la(s) puerta(s) restante(s)</p></li>
-<li><p>Si el número de puerta del jugador resulta ser la ganadora, entonces tendremos que asignar un número distinto (entre 1,2 y 3) a las dos puertas restantes, asignando a la primera puerta restante un número del vector aleatorio <code>num_aleatorios</code> distinto del número de la puerta ganadora; luego, para la segunda puerta restante utilizaremos el mismo procedimiento salvo que agregaremos que el número escogido de <code>num_aleatorios</code> sea distinto del número de la puerta ganadora y distinto del número de la primera puerta restante.</p></li>
+<li><p>Si el número de puerta del jugador resulta ser la ganadora, entonces tendremos que asignar un número distinto (entre 1,2 y 3) a las dos puertas restantes, asignando a la primera puerta restante un número entre 1,2 y 3 distinto del número de la puerta ganadora; luego, para la segunda puerta restante utilizaremos el mismo procedimiento salvo que agregaremos que el número escogido de entre los números 1,2 y 3 sea distinto del número de la puerta ganadora y distinto del número de la primera puerta restante.</p></li>
 <li><p>si el jugador pierde, entonces tendremos inicialmente dos puertas asignadas con números distintos, de tal manera, en este caso, sólo debemos asignar adicionalmente el número de la puerta restante (la no ganadora y la que no es del jugador)</p></li>
 <li><p>finalmente, en esta parte, probamos si el código funciona para ver si el jugador gana o pierde</p></li>
 </ul>
 <pre class="r"><code>Monthy_Hall &lt;- function() {
-  # Vector con 9 entradas con los números enteros del 1 al 3 
-  num_aleatorios = sample(1:3, 9, replace = T)
+  # Vector con 2 entradas con los números enteros entre el 1 y 3 
+  num_aleatorios = sample(1:3, 2, replace = T)
   
   # Número que contiene el Mazda 2 en esta ronda de juego 
-  num_ganador = num_aleatorios[2]
+  num_ganador = num_aleatorios[1]
   
   # Asignamos el número de la puerta que le corresponde al jugador en esta ronda
-  num_puerta = num_aleatorios[3]
+  num_puerta = num_aleatorios[2]
   
   # Le decimos al jugador qué puerta le tocó
   print(paste(&quot;Te ha tocado la puerta número:&quot;, num_puerta))
@@ -1066,14 +1064,14 @@ truncar(pi,10)</code></pre>
   if (num_puerta == num_ganador){
     
     # Asignación del número de la primera puerta restante
-    for (i in num_aleatorios){
+    for (i in 1:3){
       if (i != num_puerta){
         num_puerta_rest1 = i
       }
     }
     
     # Asignación del número de la segunda puerta restante
-    for (i in num_aleatorios){
+    for (i in 1:3){
       if (i != num_puerta &amp; i!=num_puerta_rest1){
         num_puerta_rest2 = i
       }
@@ -1082,7 +1080,7 @@ truncar(pi,10)</code></pre>
   
   # Número de la puerta restante para el caso en que el jugador pierde
   else {
-    for (i in num_aleatorios){
+    for (i in 1:3){
       if (i != num_puerta &amp; i!=num_ganador){
         num_puerta_rest3 = i
       }
@@ -1106,10 +1104,10 @@ truncar(pi,10)</code></pre>
 
 # Invocamos la función antes creada
 Monthy_Hall()</code></pre>
-<pre><code>## [1] &quot;Te ha tocado la puerta número: 1&quot;
-## [1] &quot;Número de puerta del jugador: 1&quot;
-## [1] &quot;Número de puerta ganadora: 2&quot;
-## [1] &quot;Puerta restante con una corona 3&quot;</code></pre>
+<pre><code>## [1] &quot;Te ha tocado la puerta número: 2&quot;
+## [1] &quot;Número de puerta del jugador: 2&quot;
+## [1] &quot;Número de puerta ganadora: 3&quot;
+## [1] &quot;Puerta restante con una corona 1&quot;</code></pre>
 <p>siendo así que, en este caso, el jugador pierde.</p>
 <ul>
 <li>Lo que sigue será destapar una puerta que el presentador sabe que tiene una corona. Será necesario considerar los casos: el jugador gana o el jugador pierde. Si el jugador gana, podemos destapar cualquiera de las dos puertas <code>num_puerta_rest1</code> o <code>num_puerta_rest2</code>; si el jugador pierde debemos destapar la puerta <code>num_puerta_rest3</code>.</li>
@@ -1139,9 +1137,9 @@ Monthy_Hall()</code></pre>
 
   # Damos un mensaje
   if (respuesta) {
-    print(&quot;Haz cambiado de número de puerta, ¡perfecto!&quot;)
+    print(&quot;Has cambiado de número de puerta, ¡perfecto!&quot;)
   } else {
-    print(&quot;¡Bien! no haz cambiado de número de puerta, continuemos&quot;)
+    print(&quot;¡Bien! no has cambiado de número de puerta, continuemos&quot;)
   }
 
   if (num_puerta == num_ganador){
@@ -1183,14 +1181,14 @@ Monthy_Hall()</code></pre>
 <hr />
 <p>El código completo de la función queda como</p>
 <pre class="r"><code>Monthy_Hall &lt;- function() {
-  # Vector con 9 entradas con los números enteros del 1 al 3 
-  num_aleatorios = sample(1:3, 9, replace = T)
+  # Vector con 2 entradas con los números enteros entre 1 y 3 
+  num_aleatorios = sample(1:3, 2, replace = T)
   
   # Número que contiene el Mazda 2 en esta ronda de juego 
-  num_ganador = num_aleatorios[2]
+  num_ganador = num_aleatorios[1]
   
   # Asignamos el número de la puerta que le corresponde al jugador en esta ronda
-  num_puerta = num_aleatorios[3]
+  num_puerta = num_aleatorios[2]
   
   # Le decimos al jugador qué puerta le tocó
   print(paste(&quot;Te ha tocado la puerta número:&quot;, num_puerta))
@@ -1204,14 +1202,14 @@ Monthy_Hall()</code></pre>
   if (num_puerta == num_ganador){
     
     # Asignación del número de la primera puerta restante
-    for (i in num_aleatorios){
+    for (i in 1:3){
       if (i != num_puerta){
         num_puerta_rest1 = i
       }
     }
     
     # Asignación del número de la segunda puerta restante
-    for (i in num_aleatorios){
+    for (i in 1:3){
       if (i != num_puerta &amp; i!=num_puerta_rest1){
         num_puerta_rest2 = i
       }
@@ -1220,7 +1218,7 @@ Monthy_Hall()</code></pre>
   
   # Número de la puerta restante para el caso en que el jugador pierde
   else {
-    for (i in num_aleatorios){
+    for (i in 1:3){
       if (i != num_puerta &amp; i!=num_ganador){
         num_puerta_rest3 = i
       }
@@ -1280,14 +1278,14 @@ Monthy_Hall()</code></pre>
 }</code></pre>
 <p>Finalmente probamos el código</p>
 <pre class="r"><code>Monthy_Hall()</code></pre>
-<pre><code>## [1] &quot;Te ha tocado la puerta número: 1&quot;
+<pre><code>## [1] &quot;Te ha tocado la puerta número: 2&quot;
 ## [1] &quot;Veamos el contenido de una de las puertas....&quot;
-## [1] &quot;La puerta número 3 contiene una deliciosa corona cero&quot;
+## [1] &quot;La puerta número 1 contiene una deliciosa corona cero&quot;
 ## ¿Desea cambiar de puerta? (Yes/no/cancel) 
 ## [1] &quot;Haz cambiado de número de puerta, ¡perfecto!&quot;
-## [1] &quot;Ahora, tu número de puerta es: 2&quot;
+## [1] &quot;Ahora, tu número de puerta es: 3&quot;
 ## [1] &quot;Procedamos a destapar la puerta ganadora....&quot;
-## [1] &quot;La puerta ganadora es: 2 ¡felicidades, has ganado!&quot;</code></pre>
+## [1] &quot;La puerta ganadora es: 3 ¡felicidades, has ganado!&quot;</code></pre>
 </div>
 </div>
 
@@ -1335,6 +1333,7 @@ $(document).ready(function () {
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
+
 
     <script type="text/javascript"> 
       function cambiarModo() { 
